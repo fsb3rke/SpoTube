@@ -16,12 +16,11 @@ def get_track_names(playlist_id: str, client_id: str, client_secret: str) -> lis
     return track_names
 
 
-spotify: dict = {"client_id": "spotify_client_id",
-                "client_secret": "spotify_client_secret"}
+spotify: dict = {"client_id": "999485233b684b27980dbad0c90b0a45",
+                "client_secret": "10f3db73784e41d9836da4dee7509648"}
 
-def get_video_ids() -> list:
-    playlist_id_input_spotify = str(input("Spotify Playlist Id: "))
-    tracks = get_track_names(playlist_id_input_spotify,
+def get_video_ids(pl: str) -> list:
+    tracks = get_track_names(pl,
                             spotify["client_id"],
                             spotify["client_secret"])
 
@@ -33,8 +32,8 @@ def get_video_ids() -> list:
     
     return tracks_ids
 
-def append_to_playlist(service_instance, target_playlist: str) -> None:
-    videos = get_video_ids()
+def append_to_playlist(service_instance, target_playlist: str, spotify_playlist: str) -> None:
+    videos = get_video_ids(spotify_playlist)
     if not videos:
         print("Source playlist is empty")
         return
