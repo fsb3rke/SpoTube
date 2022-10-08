@@ -1,0 +1,10 @@
+{
+    "APP": {
+        "language": "en"
+    },
+
+    "languages": {
+        "en": "en",
+        "tr": "tr"
+    }
+}
