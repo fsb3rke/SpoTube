@@ -1,3 +1,8 @@
+# Copyright (c) 2022 fsb3rke
+#
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
+
 from requests import request
 from youtubesearchpython import VideosSearch
 import spotipy
