@@ -45,3 +45,5 @@ pip install --upgrade google-api-python-client
 ```
 pip install --upgrade google-auth google-auth-oauthlib google-auth-httplib2
 ```
+# License
+This software is released under the [MIT](https://github.com/fsb3rke/Calendar/blob/main/LICENSE) License.
