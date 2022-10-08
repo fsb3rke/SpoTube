@@ -1,3 +1,8 @@
+# Copyright (c) 2022 fsb3rke
+#
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
+
 from APIs.Google import create_service
 from APIs.api import append_to_playlist
 
