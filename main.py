@@ -14,4 +14,5 @@ if __name__ == '__main__':
     service = create_service(CLIENT_FILE, API_NAME, API_VERSION, SCOPES)
     
     playlist_id_input_youtube = str(input("Youtube Playlist Id: "))
-    append_to_playlist(service, "youtube_playlist_id")
+    playlist_id_input_spotify = str(input("Spotify Playlist Id: "))
+    append_to_playlist(service, playlist_id_input_youtube, playlist_id_input_spotify)
