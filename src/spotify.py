@@ -11,7 +11,7 @@ class Spotify:
         self.__auth_manager = SpotifyClientCredentials(client_id=os.getenv("CLIENT_ID"), client_secret=os.getenv("CLIENT_SECRET"))
         self.__sp = spotipy.Spotify(auth_manager=self.__auth_manager)
 
-    def fetch_playlist_items_name(self, playlist_id: str) -> list:
+    def fetch_playlist_items_name_with_artist_name(self, playlist_id: str) -> list:
         playlist = self.__sp.playlist(playlist_id=playlist_id)
         tracks = playlist["tracks"]["items"]
-        return [x["track"]["name"] for x in tracks]
+        return [(x["track"]["name"], x["track"]["artists"][0]["name"]) for x in tracks]

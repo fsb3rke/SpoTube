@@ -28,22 +28,22 @@ class Youtube:
         )
 
 
-class Search:
-    def __init__(self, yt) -> None:
-        self.yt = yt
+# class Search:
+#     def __init__(self, yt) -> None:
+#         self.yt = yt
+#
+#     def search(self, query_name: str) -> dict:
+#         query_request = self.yt.search().list(
+#             part="snippet",
+#             maxResults=1,
+#             q=query_name
+#         )
+#         query_response = query_request.execute()
+#
+#         return quick_dump(query_response)
+#
 
-    def search(self, query_name: str) -> dict:
-        query_request = self.yt.search().list(
-            part="snippet",
-            maxResults=1,
-            q=query_name
-        )
-        query_response = query_request.execute()
-        
-        return quick_dump(query_response)
-
-
-# ROAD_MAP : 
+# ROAD_MAP :
 #           - Remove(video_id: str)
 #           - List()
 #             Create(playlist_name: str) -> returns playlist_id
