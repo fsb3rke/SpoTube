@@ -13,7 +13,7 @@ class Youtube:
         self.__scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
         self.__api_service_name = "youtube"
         self.__api_version = "v3"
-        self.__client_secret_file = "/home/berke/Desktop/SpoTube/src/client_secret.json"
+        self.__client_secret_file = "client_secret.json"
 
         self.__flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
             client_secrets_file=self.__client_secret_file,
@@ -44,8 +44,9 @@ class Search:
 
 
 # ROAD_MAP : 
-#           - Remove()
+#           - Remove(video_id: str)
 #           - List()
+#             Create(playlist_name: str) -> returns playlist_id
 class Playlist:
     def __init__(self, yt, playlist_id: str) -> None:
         self.yt = yt
