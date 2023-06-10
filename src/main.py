@@ -1,15 +1,23 @@
 from youtube import Youtube, Playlist, Search
 from spotify import Spotify
+import json
 
 
-yt: Youtube = Youtube()
-yt_search: Search = Search(yt.youtube)
-query_dict: dict = yt_search.search("Ali Avcıdan")
-print(query_dict)
+def main():
+    yt: Youtube = Youtube()
+    yt_search: Search = Search(yt.youtube)
+    sp: Spotify = Spotify()
 
-pl = Playlist = Playlist(yt.youtube, "PLDykUHIHZT8tTNNwCCSIOvdUxiUxFTQse")
-print(pl.insert("rSJtx1p6vdY"))
+    youtube_playlist_id = str(input("Please enter your Youtube Playlist Id: "))
+    spotify_playlist_id = str(input("Please enter your Spotify Playlist Id: "))
 
-sp: Spotify = Spotify()
-print(sp.fetch_playlist_items_name("42r1I9gc1gscP0NQ9VBmEo"))
+    pl: Playlist = Playlist(yt.youtube, youtube_playlist_id)
+    track_names = sp.fetch_playlist_items_name(spotify_playlist_id)
 
+    for name in track_names:
+        # Search name in Youtube
+        video_id = json.loads(yt_search.search(name))["items"][0]["id"]["videoId"]
+        pl.insert(video_id=video_id)
+
+if __name__ == "__main__":
+    main()
