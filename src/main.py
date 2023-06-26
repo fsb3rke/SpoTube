@@ -1,6 +1,5 @@
 from youtube import Youtube, Playlist
 from spotify import Spotify
-import time
 import youtubesearchpython
 import PySimpleGUI as sg
 
