@@ -11,7 +11,7 @@ def main():
     sg.theme("DarkAmber")
 
     layout = [
-        [sg.Text("SpoTube")]
+        [sg.Text("SpoTube")],
         [sg.Text("Youtube Playlist Id"), sg.InputText()],
         [sg.Text("Spotify Playlist Id"), sg.InputText()],
         [sg.Button("Ok")]
@@ -25,16 +25,17 @@ def main():
             break
 
         if event == "Ok":
-            pl: Playlist = Playlist(yt.youtube, values[0])
-            track_fetch_data = sp.fetch_playlist_items_name_with_artist_name(values[1])
+            if not (values[0] == "" or values[1] == ""):
+                pl: Playlist = Playlist(yt.youtube, values[0])
+                track_fetch_data = sp.fetch_playlist_items_name_with_artist_name(values[1])
 
-            for track in track_fetch_data:
-                # Search name in Youtube
-                video_id = youtubesearchpython.VideosSearch(f"{track[0]} {track[1]}", limit=1).result()["result"][0]["id"]
-                pl.insert(video_id=video_id)
-                print(f"{video_id} has been inserted")
+                for track in track_fetch_data:
+                    # Search name in Youtube
+                    video_id = youtubesearchpython.VideosSearch(f"{track[0]} {track[1]}", limit=1).result()["result"][0]["id"]
+                    pl.insert(video_id=video_id)
+                    print(f"{video_id} has been inserted")
 
-        print(values)
+            print(values)
 
 
 
