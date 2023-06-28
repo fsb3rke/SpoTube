@@ -5,6 +5,8 @@ import PySimpleGUI as sg
 from threading import Thread
 
 
+stop_thread = [False] # manipulate pointer
+
 def handle_insert(pl: Playlist, track_fetch_data, window, max_number_of_insert_track):
     ll = len(track_fetch_data)
     for i, track in enumerate(track_fetch_data):
@@ -17,9 +19,9 @@ def handle_insert(pl: Playlist, track_fetch_data, window, max_number_of_insert_t
         if (i+1) == max_number_of_insert_track:
             break
         
-        # global stop_thread
-        # if stop_thread:
-            # break
+        
+        if stop_thread[0]:
+            break
 
 
 def main():
@@ -30,11 +32,11 @@ def main():
 
     layout = [
         [sg.Text("SpoTube")],
-        [sg.Text("Youtube Playlist Id"), sg.InputText()],
-        [sg.Text("Spotify Playlist Id"), sg.InputText()],
+        [sg.Text("Youtube Playlist Id"), sg.Push(), sg.InputText()],
+        [sg.Text("Spotify Playlist Id  "), sg.Push(), sg.InputText()],
         [sg.Text("Max Number of Insert Track"), sg.InputText()],
-        [sg.Button("Convert")], #, sg.Button("Stop")],
-        [sg.Text("fsb3rke", key="inserted_track_text"), sg.Text("0/0", key="total_inserted_track_text")]
+        [sg.Button("Convert"), sg.Button("Stop")],
+        [sg.Text("fsb3rke", key="inserted_track_text"), sg.Push(), sg.Text("0/0", key="total_inserted_track_text")]
     ]
 
     window = sg.Window("SpoTube", layout)
@@ -59,11 +61,11 @@ def main():
                 th = Thread(target=handle_insert, args=(pl, track_fetch_data, window, int_max_number_of_insert_track))
                 th.start()
 
-        # if event == "Stop":
-            # if th is not None:
-                # stop_thread = True
-                # th.join()
-                # th = None
+        if event == "Stop":
+            if th is not None:
+                stop_thread[0] = True
+                th.join()
+                th = None
 
             print(values) # , stop_thread)
 
