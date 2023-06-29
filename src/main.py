@@ -17,18 +17,28 @@ class Raiser:
     def __init__(self):
         self.stop_thread = False
 
-def handle_convert(window, values, sp, yt, max_number_of_insert_track, raiser, checkbox_dict) -> None:
+def handle_convert(window, values, sp, yt, raiser, checkbox_dict) -> None:
     pl: Playlist = Playlist(yt.youtube, values[0])
     window["inserted_track_text"].update("Fetching Spotify Playlist...")
     track_fetch_data = sp.fetch_playlist_items_name_with_artist_name(values[1])
     ll = len(track_fetch_data)
-    int_max_number_of_insert_track = int(max_number_of_insert_track)
+    try:
+        int_max_number_of_insert_track = int(values[2])
+    except KeyError:
+        int_max_number_of_insert_track = 0
+
     int_max_number_of_insert_track = ll if checkbox_dict["insert_track_max"] else ll if int_max_number_of_insert_track > ll else 1 if int_max_number_of_insert_track < 1 else int_max_number_of_insert_track
 
     try:
         for i, track in enumerate(track_fetch_data):
             video_id = youtubesearchpython.VideosSearch(f"{track[0]} {track[1]}", limit=1).result()["result"][0]["id"]
-            pl.insert(video_id)
+            isInserted = False
+            while isInserted == False:
+                isInserted = True
+                try:
+                    pl.insert(video_id)
+                except: # googleapiclient.errors.HttpError
+                    isInserted = False
             window["inserted_track_text"].update(f"{handle_character_limit(track[0])} | {track[1]}")
             window["total_inserted_track_text"].update(f" ({(i+1)}/{int_max_number_of_insert_track})")
             print(f"{track[0]} | {track[1]} => {video_id} ? INSERTED | ({(i+1)}/{int_max_number_of_insert_track})")
@@ -40,6 +50,14 @@ def handle_convert(window, values, sp, yt, max_number_of_insert_track, raiser, c
                 break
     except RuntimeError:
         pass
+
+def handle_stop(th, raiser, window):
+    print("Stop Button Pressed")
+    raiser.stop_thread = True
+    th[0].join()
+    raiser.stop_thread = False
+    window["inserted_track_text"].update("fsb3rke")
+    window["total_inserted_track_text"].update("0/0")
 
 def main():
     yt: Youtube = Youtube()
@@ -57,7 +75,7 @@ def main():
     ]
 
     window = sg.Window("SpoTube", layout)
-    th = [None]
+    th = [None, None]
     raiser = Raiser()
     checkbox_dict: dict = {"insert_track_max": True}
 
@@ -71,26 +89,22 @@ def main():
         if event == "Convert":
             if not (is_empty(values[0]) or is_empty(values[1])):
 
-                th[0] = Thread(target=handle_convert, args=(window, values, sp, yt, values[2], raiser, checkbox_dict))
+                th[0] = Thread(target=handle_convert, args=(window, values, sp, yt, raiser, checkbox_dict))
                 th[0].start()
                 
                 raiser.stop_thread = False
 
         if event == "Stop":
             # TODO: Handle this with another thread
-            print("Stop Button Pressed")
-            raiser.stop_thread = True
-            th[0].join()
-            raiser.stop_thread = False
-            window["inserted_track_text"].update("fsb3rke")
-            window["total_inserted_track_text"].update("0/0")
+            th[1] = Thread(target=handle_stop, args=(th, raiser, window))
+            th[1].start()
 
             print(values) # , stop_thread)
 
         if event == "insert_track_max":
             checkbox_dict["insert_track_max"] = not checkbox_dict["insert_track_max"]
             window["insert_track_max"].update(value=checkbox_dict["insert_track_max"])
-            window["insert_track_max_input"].update(disabled=(not checkbox_dict["insert_track_max"]))
+            window["insert_track_max_input"].update(disabled=checkbox_dict["insert_track_max"])
             print(checkbox_dict["insert_track_max"], (not checkbox_dict["insert_track_max"]))
 
 
