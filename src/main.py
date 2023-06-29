@@ -19,6 +19,7 @@ class Raiser:
 
 def handle_convert(window, values, sp, yt, max_number_of_insert_track, raiser) -> None:
     pl: Playlist = Playlist(yt.youtube, values[0])
+    window["inserted_track_text"].update("Fetching Spotify Playlist...")
     track_fetch_data = sp.fetch_playlist_items_name_with_artist_name(values[1])
     ll = len(track_fetch_data)
     int_max_number_of_insert_track = int(max_number_of_insert_track)
@@ -79,6 +80,8 @@ def main():
             raiser.stop_thread = True
             th[0].join()
             raiser.stop_thread = False
+            window["inserted_track_text"].update("fsb3rke")
+            window["total_inserted_track_text"].update("0/0")
 
             print(values) # , stop_thread)
 
