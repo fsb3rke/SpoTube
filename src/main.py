@@ -78,7 +78,7 @@ def main():
             print("Stop Button Pressed")
             raiser.stop_thread = True
             th[0].join()
-            raiser.stop_thread = False # TODO: Solve bug : RuntimeError
+            raiser.stop_thread = False
 
             print(values) # , stop_thread)
 
