@@ -24,19 +24,21 @@ def handle_convert(window, values, sp, yt, max_number_of_insert_track, raiser) -
     int_max_number_of_insert_track = int(max_number_of_insert_track)
     int_max_number_of_insert_track = ll if int_max_number_of_insert_track > ll else 1 if int_max_number_of_insert_track < 1 else int_max_number_of_insert_track
 
+    try:
+        for i, track in enumerate(track_fetch_data):
+            video_id = youtubesearchpython.VideosSearch(f"{track[0]} {track[1]}", limit=1).result()["result"][0]["id"]
+            pl.insert(video_id)
+            window["inserted_track_text"].update(f"{handle_character_limit(track[0])} | {track[1]}")
+            window["total_inserted_track_text"].update(f" ({(i+1)}/{int_max_number_of_insert_track})")
+            print(f"{track[0]} | {track[1]} => {video_id} ? INSERTED | ({(i+1)}/{int_max_number_of_insert_track})")
 
-    for i, track in enumerate(track_fetch_data):
-        video_id = youtubesearchpython.VideosSearch(f"{track[0]} {track[1]}", limit=1).result()["result"][0]["id"]
-        pl.insert(video_id)
-        window["inserted_track_text"].update(f"{handle_character_limit(track[0])} | {track[1]}")
-        window["total_inserted_track_text"].update(f" ({(i+1)}/{int_max_number_of_insert_track})")
-        print(f"{track[0]} | {track[1]} => {video_id} ? INSERTED | ({(i+1)}/{int_max_number_of_insert_track})")
-
-        if (i+1) >= int(max_number_of_insert_track): # Why this is happening idk. It recongnized str instead of int.
-            break
-        
-        elif raiser.stop_thread:
-            break
+            if (i+1) >= int_max_number_of_insert_track: # Why this is happening idk. It recongnized str instead of int.
+                break
+            
+            elif raiser.stop_thread:
+                break
+    except RuntimeError:
+        pass
 
 def main():
     yt: Youtube = Youtube()
@@ -54,12 +56,12 @@ def main():
     ]
 
     window = sg.Window("SpoTube", layout)
+    th = [None]
+    raiser = Raiser()
 
     while True:
         event, values = window.read()
         youtube_playlist_id, spotify_playlist_id, max_number_of_insert_track = values[0], values[1], values[2]
-        th = [None]
-        raiser = Raiser()
 
         if event == sg.WIN_CLOSED:
             break
@@ -67,22 +69,16 @@ def main():
         if event == "Convert":
             if not (is_empty(youtube_playlist_id) or is_empty(spotify_playlist_id)):
 
-                try:
-                    th[0] = Thread(target=handle_convert, args=(window, values, sp, yt, max_number_of_insert_track, raiser))
-                    th[0].start()
-                except RuntimeError:
-                    pass
+                th[0] = Thread(target=handle_convert, args=(window, values, sp, yt, max_number_of_insert_track, raiser))
+                th[0].start()
                 
                 raiser.stop_thread = False
 
         if event == "Stop":
-            try:
-                print("sa")
-                raiser.stop_thread = True
-                th[0].join()
-                raiser.stop_thread = False # TODO: Solve bug : RuntimeError
-            except RuntimeError:
-                pass
+            print("Stop Button Pressed")
+            raiser.stop_thread = True
+            th[0].join()
+            raiser.stop_thread = False # TODO: Solve bug : RuntimeError
 
             print(values) # , stop_thread)
 
