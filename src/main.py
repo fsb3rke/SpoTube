@@ -1,4 +1,5 @@
 from youtube import Youtube, Playlist
+from googleapiclient import errors
 from spotify import Spotify
 import youtubesearchpython
 import PySimpleGUI as sg
@@ -37,7 +38,7 @@ def handle_convert(window, values, sp, yt, raiser, checkbox_dict) -> None:
                 isInserted = True
                 try:
                     pl.insert(video_id)
-                except: # googleapiclient.errors.HttpError
+                except errors.HttpError:
                     isInserted = False
             window["inserted_track_text"].update(f"{handle_character_limit(track[0])} | {track[1]}")
             window["total_inserted_track_text"].update(f" ({(i+1)}/{int_max_number_of_insert_track})")
@@ -50,6 +51,8 @@ def handle_convert(window, values, sp, yt, raiser, checkbox_dict) -> None:
                 break
     except RuntimeError:
         pass
+
+    window["inserted_track_text"].update("Proccess Insert has been finished.")
 
 def handle_stop(th, raiser, window):
     print("Stop Button Pressed")
