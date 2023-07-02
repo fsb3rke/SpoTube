@@ -1,7 +1,7 @@
 
 # SpoTube
 
-A simple tool for convert Youtube playlist to Spotify playlist
+A simple tool for convert Spotify playlist to Youtube playlist.
 
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
