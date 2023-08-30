@@ -33,13 +33,13 @@ def handle_convert(window, values, sp, yt, raiser, checkbox_dict) -> None:
     try:
         for i, track in enumerate(track_fetch_data):
             video_id = youtubesearchpython.VideosSearch(f"{track[0]} {track[1]}", limit=1).result()["result"][0]["id"]
-            isInserted = False
-            while isInserted == False:
-                isInserted = True
+            while True:
                 try:
                     pl.insert(video_id)
                 except errors.HttpError:
-                    isInserted = False
+                    continue
+                break
+                        
             window["inserted_track_text"].update(f"{handle_character_limit(track[0])} | {track[1]}")
             window["total_inserted_track_text"].update(f" ({(i+1)}/{int_max_number_of_insert_track})")
             print(f"{track[0]} | {track[1]} => {video_id} ? INSERTED | ({(i+1)}/{int_max_number_of_insert_track})")
